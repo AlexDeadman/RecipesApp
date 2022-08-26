@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Recipes</string>
+    <string name="unknown_error">Unknown error</string>
+    <string name="no_items">No items</string>
+</resources>
