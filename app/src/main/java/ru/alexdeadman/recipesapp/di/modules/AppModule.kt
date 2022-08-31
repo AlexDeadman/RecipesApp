@@ -3,7 +3,6 @@ package ru.alexdeadman.recipesapp.di.modules
 import android.content.Context
 import androidx.room.Room
 import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
