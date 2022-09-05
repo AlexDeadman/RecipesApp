@@ -3,8 +3,9 @@ package ru.alexdeadman.recipesapp.data.recipes.room
 import ru.alexdeadman.recipesapp.data.recipes.RecipeListLocalDataSource
 import ru.alexdeadman.recipesapp.data.recipes.retrofit.RecipeListResponse
 
-class RoomRecipeListDataSource(private val recipeListDao: RecipeListDao) :
-    RecipeListLocalDataSource {
+class RoomRecipeListDataSource(
+    private val recipeListDao: RecipeListDao
+) : RecipeListLocalDataSource {
 
     override suspend fun loadAllRecipes(): List<RecipeEntity> = recipeListDao.loadAllRecipes()
 

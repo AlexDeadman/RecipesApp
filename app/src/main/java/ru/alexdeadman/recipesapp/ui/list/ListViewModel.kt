@@ -24,7 +24,7 @@ class ListViewModel(private val repository: RecipeListRepository) : ViewModel() 
         viewModelScope.launch(Dispatchers.IO) {
             repository.fetchRecipes()
                 .catch {
-                    // TODO
+                    // TODO handle
                 }.collect {
                     _listStateFlow.value = try {
                         if (it.recipes.isEmpty()) ListState.NoItems()

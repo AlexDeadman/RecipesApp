@@ -2,4 +2,8 @@
     <string name="app_name">Recipes</string>
     <string name="unknown_error">Unknown error</string>
     <string name="no_items">No items</string>
+    <string name="description">Description</string>
+    <string name="instructions">Instructions</string>
+    <string name="difficulty">Difficulty: %d</string>
+    <string name="no_description">No description</string>
 </resources>

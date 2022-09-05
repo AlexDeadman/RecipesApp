@@ -7,4 +7,10 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="diff_1">#2ddc75</color>
+    <color name="diff_2">#4eac24</color>
+    <color name="diff_3">#d3da3c</color>
+    <color name="diff_4">#dd8e18</color>
+    <color name="diff_5">#db2728</color>
 </resources>

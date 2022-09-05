@@ -1,5 +1,6 @@
 package ru.alexdeadman.recipesapp.ui.list
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
@@ -16,6 +18,7 @@ import kotlinx.coroutines.flow.filterNotNull
 import ru.alexdeadman.recipesapp.R
 import ru.alexdeadman.recipesapp.collectOnLifecycle
 import ru.alexdeadman.recipesapp.databinding.FragmentListBinding
+import ru.alexdeadman.recipesapp.ui.BundleKeys
 import ru.alexdeadman.recipesapp.ui.ViewModelFactory
 import ru.alexdeadman.recipesapp.ui.state.ListState.*
 import javax.inject.Inject
@@ -34,7 +37,8 @@ class ListFragment : Fragment() {
     private lateinit var viewModel: ListViewModel
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentListBinding.inflate(inflater, container, false)
@@ -47,12 +51,32 @@ class ListFragment : Fragment() {
         binding.apply {
 
             itemAdapter = ItemAdapter()
-            fastAdapter = FastAdapter.with(itemAdapter)
+            fastAdapter = FastAdapter.with(itemAdapter).apply {
+                onClickListener = { _, _, item, _ ->
+                    findNavController().navigate(
+                        R.id.action_listFragment_to_detailsFragment,
+                        Bundle().apply {
+                            putParcelable(
+                                BundleKeys.RECIPE_ITEM,
+                                item.recipeItem
+                            )
+                        }
+                    )
+                    false
+                }
+            }
 
             recyclerView.apply {
                 setHasFixedSize(true)
                 adapter = fastAdapter
-                layoutManager = GridLayoutManager(requireContext(), 2)
+
+                val isPortrait =
+                    resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
+
+                layoutManager = GridLayoutManager(
+                    requireContext(),
+                    if (isPortrait) 2 else 3
+                )
             }
 
             viewModel = ViewModelProvider(
@@ -66,7 +90,9 @@ class ListFragment : Fragment() {
                     when (state) {
                         is Loaded -> {
                             FastAdapterDiffUtil[itemAdapter] =
-                                state.result.recipes.map { ListItem(it) }
+                                state.result.recipes.map {
+                                    ListItem(requireContext(), it)
+                                }
                         }
                         is NoItems -> {
                             Toast.makeText(

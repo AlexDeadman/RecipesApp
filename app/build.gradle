@@ -1,8 +1,10 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
-    id "org.jetbrains.kotlin.kapt"
+    id 'org.jetbrains.kotlin.kapt'
     id 'com.google.dagger.hilt.android'
+
+    id 'kotlin-parcelize'
 }
 
 android {
@@ -51,16 +53,15 @@ dependencies {
     // Core
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.5.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.5.1"
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.5.1'
     implementation 'androidx.navigation:navigation-fragment:2.5.1'
     implementation 'androidx.navigation:navigation-ui-ktx:2.5.1'
     implementation 'com.google.android.material:material:1.6.1'
-    implementation "androidx.recyclerview:recyclerview:1.2.1"
-    implementation "androidx.recyclerview:recyclerview-selection:1.1.0"
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
+    implementation 'androidx.recyclerview:recyclerview-selection:1.1.0'
 
-    implementation "org.jetbrains.kotlin:kotlin-reflect:1.7.10"
+    implementation 'org.jetbrains.kotlin:kotlin-reflect:1.7.10'
 
     // Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
@@ -72,10 +73,10 @@ dependencies {
     kapt 'com.google.dagger:hilt-compiler:2.43.2'
 
     // Room
-    implementation "androidx.room:room-runtime:2.4.3"
-    implementation "androidx.room:room-ktx:2.4.3"
-    annotationProcessor "androidx.room:room-compiler:2.4.3"
-    kapt "androidx.room:room-compiler:2.4.3"
+    implementation 'androidx.room:room-runtime:2.4.3'
+    implementation 'androidx.room:room-ktx:2.4.3'
+    annotationProcessor 'androidx.room:room-compiler:2.4.3'
+    kapt 'androidx.room:room-compiler:2.4.3'
 
     // FastAdapter
     implementation 'com.mikepenz:fastadapter:5.6.0'
@@ -83,8 +84,16 @@ dependencies {
     implementation 'com.mikepenz:fastadapter-extensions-diff:5.6.0'
     implementation 'com.mikepenz:fastadapter-extensions-ui:5.6.0'
 
-    // Coil
-    implementation 'io.coil-kt:coil:2.2.0'
+    // Picasso
+    implementation 'com.squareup.picasso:picasso:2.5.2'
+
+    // AndroidImageSlider
+    implementation 'com.nineoldandroids:library:2.4.0'
+    implementation 'com.daimajia.slider:library:1.1.5@aar'
+
+    // StfalconImageViewer
+    implementation 'com.github.stfalcon-studio:StfalconImageViewer:v1.0.1'
+
 }
 
 kapt {
