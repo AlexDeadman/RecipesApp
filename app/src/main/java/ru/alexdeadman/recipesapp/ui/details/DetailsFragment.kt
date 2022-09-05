@@ -1,11 +1,17 @@
 package ru.alexdeadman.recipesapp.ui.details
 
+import android.content.ContentValues
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
+import android.os.Build
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import com.daimajia.slider.library.SliderTypes.BaseSliderView
@@ -19,6 +25,7 @@ import ru.alexdeadman.recipesapp.data.recipes.retrofit.RecipeItem
 import ru.alexdeadman.recipesapp.databinding.FragmentDetailsBinding
 import ru.alexdeadman.recipesapp.ui.BundleKeys
 
+
 class DetailsFragment : Fragment() {
 
     private var _binding: FragmentDetailsBinding? = null
@@ -26,7 +33,9 @@ class DetailsFragment : Fragment() {
 
     private lateinit var imageViewer: StfalconImageViewer<String>
     private lateinit var picasso: Picasso
-    private lateinit var images: List<String>
+
+    private lateinit var recipeItem: RecipeItem
+    private val images: List<String> get() = recipeItem.images
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,8 +58,7 @@ class DetailsFragment : Fragment() {
 
             picasso = Picasso.with(requireContext())
 
-            val recipeItem = requireArguments().getParcelable<RecipeItem>(BundleKeys.RECIPE_ITEM)!!
-            images = recipeItem.images
+            recipeItem = requireArguments().getParcelable(BundleKeys.RECIPE_ITEM)!!
 
             images.map { url ->
                 sliderLayout.addSlider(
@@ -98,8 +106,8 @@ class DetailsFragment : Fragment() {
                     images[imageViewer.currentPosition()]
                 ).into(
                     object : Target {
-                        override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
-                            // TODO save to gallery
+                        override fun onBitmapLoaded(bitmap: Bitmap, from: Picasso.LoadedFrom?) {
+                            saveToGallery(bitmap)
                         }
 
                         override fun onBitmapFailed(errorDrawable: Drawable?) {}
@@ -124,6 +132,45 @@ class DetailsFragment : Fragment() {
             .show()
     }
 
+    private fun saveToGallery(bitmap: Bitmap) {
+
+        val contentResolver = requireContext().contentResolver
+        val title = "${recipeItem.name} ${imageViewer.currentPosition() + 1}"
+
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+
+                val contentValues = ContentValues().apply {
+                    put(MediaStore.MediaColumns.DISPLAY_NAME, "$title.jpg")
+                    put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
+                    put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
+                }
+
+                val imageUri = contentResolver.insert(
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                    contentValues
+                )
+
+                val outputStream = contentResolver.openOutputStream(imageUri!!)
+
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+
+            } else {
+                @Suppress("DEPRECATION")
+                MediaStore.Images.Media.insertImage(
+                    contentResolver,
+                    bitmap,
+                    title,
+                    ""
+                )
+            }
+            Toast.makeText(requireContext(), "Image saved", Toast.LENGTH_SHORT).show()
+        } catch (e: Exception) {
+            Toast.makeText(requireContext(), "Can't save image", Toast.LENGTH_SHORT).show()
+            Log.e(TAG, "saveToGallery: $e", )
+        }
+    }
+
     override fun onPause() {
         super.onPause()
         imageViewer.dismiss()
@@ -132,5 +179,9 @@ class DetailsFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        private val TAG = this::class.simpleName
     }
 }

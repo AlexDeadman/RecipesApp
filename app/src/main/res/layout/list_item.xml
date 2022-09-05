@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="250dp"
@@ -7,25 +8,34 @@
     tools:layout_width="190dp">
 
     <ImageView
-        android:id="@+id/image_view_card_bg"
+        android:id="@+id/image_view_bg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
         tools:ignore="ContentDescription"
         tools:src="@tools:sample/backgrounds/scenic" />
 
-    <TextView
-        android:id="@+id/text_view_card_difficulty"
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_difficulty"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_gravity="end"
         android:layout_margin="6dp"
-        android:background="@drawable/bg_circle"
-        android:gravity="center"
-        android:textColor="@color/white"
-        android:textStyle="bold"
-        tools:backgroundTint="@android:color/holo_red_light"
-        tools:text="5" />
+        app:cardCornerRadius="15dp"
+        tools:cardBackgroundColor="@android:color/holo_red_light">
+
+        <TextView
+            android:id="@+id/text_view_difficulty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            tools:text="5" />
+
+    </com.google.android.material.card.MaterialCardView>
+
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
@@ -36,7 +46,7 @@
         android:padding="6dp">
 
         <TextView
-            android:id="@+id/text_view_card_name"
+            android:id="@+id/text_view_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="end"
@@ -46,7 +56,7 @@
             tools:text="@tools:sample/lorem" />
 
         <TextView
-            android:id="@+id/text_view_card_description"
+            android:id="@+id/text_view_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="end"

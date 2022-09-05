@@ -4,7 +4,6 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.DrawableCompat
 import com.mikepenz.fastadapter.binding.AbstractBindingItem
 import com.squareup.picasso.Picasso
 import ru.alexdeadman.recipesapp.R
@@ -30,12 +29,11 @@ class ListItem(
     override fun bindView(binding: ListItemBinding, payloads: List<Any>) {
         binding.apply {
 
-            textViewCardName.text = recipeItem.name
-            textViewCardDescription.text = recipeItem.description
-            textViewCardDifficulty.text = recipeItem.difficulty.toString()
+            textViewName.text = recipeItem.name
+            textViewDescription.text = recipeItem.description
+            textViewDifficulty.text = recipeItem.difficulty.toString()
 
-            DrawableCompat.setTint(
-                textViewCardDifficulty.background,
+            cardDifficulty.setCardBackgroundColor(
                 ContextCompat.getColor(
                     context,
                     when (recipeItem.difficulty) {
@@ -52,7 +50,7 @@ class ListItem(
             Picasso.with(context)
                 .load(recipeItem.images.first())
                 .placeholder(R.drawable.food_placeholder_grid)
-                .into(imageViewCardBg)
+                .into(imageViewBg)
         }
     }
 }
