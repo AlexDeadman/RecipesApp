@@ -1,4 +1,4 @@
-package ru.alexdeadman.recipesapp.ui.state
+package ru.alexdeadman.recipesapp.ui.list
 
 import ru.alexdeadman.recipesapp.data.recipes.retrofit.RecipeListResponse
 

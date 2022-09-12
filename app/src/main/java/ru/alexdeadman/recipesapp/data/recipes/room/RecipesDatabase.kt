@@ -10,6 +10,7 @@ import ru.alexdeadman.recipesapp.data.converters.StringListConverter
     version = 1,
     exportSchema = true
 )
+@TypeConverters(StringListConverter::class)
 abstract class RecipesDatabase: RoomDatabase() {
     abstract fun recipeListDao(): RecipeListDao
 }

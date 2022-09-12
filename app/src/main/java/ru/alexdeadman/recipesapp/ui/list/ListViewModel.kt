@@ -9,12 +9,16 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import ru.alexdeadman.recipesapp.data.recipes.RecipeListRepository
-import ru.alexdeadman.recipesapp.ui.state.ListState
 
 class ListViewModel(private val repository: RecipeListRepository) : ViewModel() {
 
     private val _listStateFlow = MutableStateFlow<ListState?>(null)
     val listStateFlow = _listStateFlow.asStateFlow()
+
+    // TODO: implement through SavedInstanceState (no reasons to use VM for UI)
+    var sortOption = SortDialogFragment.SORT_OPTIONS.entries.first()
+    var searchQuery: String? = null
+    //
 
     init {
         fetchRecipes()
@@ -24,7 +28,7 @@ class ListViewModel(private val repository: RecipeListRepository) : ViewModel() 
         viewModelScope.launch(Dispatchers.IO) {
             repository.fetchRecipes()
                 .catch {
-                    // TODO handle
+                    // TODO: handle
                 }.collect {
                     _listStateFlow.value = try {
                         if (it.recipes.isEmpty()) ListState.NoItems()
@@ -38,6 +42,6 @@ class ListViewModel(private val repository: RecipeListRepository) : ViewModel() 
     }
 
     companion object {
-        private val TAG = this::class.simpleName
+        private const val TAG = "ListViewModel"
     }
 }

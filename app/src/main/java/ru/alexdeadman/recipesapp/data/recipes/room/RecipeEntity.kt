@@ -3,8 +3,6 @@ package ru.alexdeadman.recipesapp.data.recipes.room
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import androidx.room.TypeConverters
-import ru.alexdeadman.recipesapp.data.converters.StringListConverter
 import ru.alexdeadman.recipesapp.data.recipes.retrofit.RecipeItem
 import ru.alexdeadman.recipesapp.data.recipes.room.RecipeEntity.Companion.TABLE_NAME
 
@@ -18,7 +16,6 @@ data class RecipeEntity(
     val name: String,
 
     @ColumnInfo(name = "images")
-    @field:TypeConverters(StringListConverter::class)
     val images: List<String>,
 
     @ColumnInfo(name = "last_updated")

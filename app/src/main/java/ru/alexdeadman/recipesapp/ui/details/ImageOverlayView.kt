@@ -24,6 +24,4 @@ class ImageOverlayView @JvmOverloads constructor(
             buttonBack.setOnClickListener { onBackClick() }
         }
     }
-
-    // TODO binding = null
 }

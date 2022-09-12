@@ -1,5 +1,7 @@
 package ru.alexdeadman.recipesapp
 
+import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
@@ -17,4 +19,8 @@ fun <T> Flow<T>.collectOnLifecycle(
             collect(collector)
         }
     }
+}
+
+fun Fragment.showToast(message: String) {
+    Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
 }

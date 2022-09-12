@@ -11,7 +11,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import com.daimajia.slider.library.SliderTypes.BaseSliderView
@@ -23,6 +22,7 @@ import com.stfalcon.imageviewer.StfalconImageViewer
 import ru.alexdeadman.recipesapp.R
 import ru.alexdeadman.recipesapp.data.recipes.retrofit.RecipeItem
 import ru.alexdeadman.recipesapp.databinding.FragmentDetailsBinding
+import ru.alexdeadman.recipesapp.showToast
 import ru.alexdeadman.recipesapp.ui.BundleKeys
 
 
@@ -102,19 +102,18 @@ class DetailsFragment : Fragment() {
 
         val imageOverlay = ImageOverlayView(requireContext()).apply {
             onDownloadClick = {
-                picasso.load(
-                    images[imageViewer.currentPosition()]
-                ).into(
-                    object : Target {
-                        override fun onBitmapLoaded(bitmap: Bitmap, from: Picasso.LoadedFrom?) {
-                            saveToGallery(bitmap)
+                picasso
+                    .load(images[imageViewer.currentPosition()])
+                    .into(
+                        object : Target {
+                            override fun onBitmapLoaded(bitmap: Bitmap, from: Picasso.LoadedFrom?) {
+                                saveToGallery(bitmap)
+                            }
+
+                            override fun onBitmapFailed(errorDrawable: Drawable?) {}
+                            override fun onPrepareLoad(placeHolderDrawable: Drawable?) {}
                         }
-
-                        override fun onBitmapFailed(errorDrawable: Drawable?) {}
-                        override fun onPrepareLoad(placeHolderDrawable: Drawable?) {}
-                    }
-                )
-
+                    )
             }
             onBackClick = {
                 imageViewer.close()
@@ -164,24 +163,23 @@ class DetailsFragment : Fragment() {
                     ""
                 )
             }
-            Toast.makeText(requireContext(), "Image saved", Toast.LENGTH_SHORT).show()
-        } catch (e: Exception) {
-            Toast.makeText(requireContext(), "Can't save image", Toast.LENGTH_SHORT).show()
-            Log.e(TAG, "saveToGallery: $e", )
-        }
-    }
+            showToast(getString(R.string.image_saved))
 
-    override fun onPause() {
-        super.onPause()
-        imageViewer.dismiss()
+        } catch (e: Exception) {
+            showToast(getString(R.string.cant_save_image))
+            Log.e(TAG, "saveToGallery: $e")
+        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+
+        imageViewer.dismiss()
+
         _binding = null
     }
 
     companion object {
-        private val TAG = this::class.simpleName
+        private const val TAG = "DetailsFragment"
     }
 }

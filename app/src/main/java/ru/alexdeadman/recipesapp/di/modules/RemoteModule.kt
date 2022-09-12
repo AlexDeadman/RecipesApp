@@ -33,5 +33,4 @@ object RemoteModule {
     @Provides
     @Singleton
     fun provideRecipesApi(retrofit: Retrofit): RecipesApi = retrofit.create(RecipesApi::class.java)
-
 }

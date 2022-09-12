@@ -6,4 +6,17 @@
     <string name="instructions">Instructions</string>
     <string name="difficulty">Difficulty: %d</string>
     <string name="no_description">No description</string>
+    <string name="image_saved">Image saved</string>
+    <string name="cant_save_image">Can\'t save image</string>
+    <string name="search">Search</string>
+    <string name="sort">Sort</string>
+
+    <string-array name="sort_options">
+        <item>None</item>
+        <item>Name A..Z</item>
+        <item>Name Z..A</item>
+        <item>Date New..Old</item>
+        <item>Date Old..New</item>
+    </string-array>
+
 </resources>

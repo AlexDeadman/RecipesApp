@@ -1,5 +1,7 @@
 package ru.alexdeadman.recipesapp.data.converters
 
 import androidx.room.ProvidedTypeConverter
+import com.google.gson.Gson
 
-class StringListConverter : ListConverter<String>()
+@ProvidedTypeConverter
+class StringListConverter(gson: Gson) : ListConverter<String>(gson)

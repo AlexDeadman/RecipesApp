@@ -5,14 +5,12 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
 
-// TODO pass Gson
-abstract class ListConverter<T> {
-
+abstract class ListConverter<T> (private val gson: Gson) {
 
     @TypeConverter
-    fun toString(value: List<T>): String = Gson().toJson(value)
+    fun toString(value: List<T>): String = gson.toJson(value)
 
     @TypeConverter
     fun toList(value: String): List<T> =
-        Gson().fromJson(value, object : TypeToken<List<T>>() {}.type)
+        gson.fromJson(value, object : TypeToken<List<T>>() {}.type)
 }

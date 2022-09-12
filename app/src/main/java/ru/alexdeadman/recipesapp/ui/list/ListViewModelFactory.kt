@@ -1,10 +1,10 @@
-package ru.alexdeadman.recipesapp.ui
+package ru.alexdeadman.recipesapp.ui.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import ru.alexdeadman.recipesapp.data.recipes.RecipeListRepository
 
-class ViewModelFactory(
+class ListViewModelFactory(
     private val recipeListRepository: RecipeListRepository
 ) : ViewModelProvider.NewInstanceFactory() {
 
