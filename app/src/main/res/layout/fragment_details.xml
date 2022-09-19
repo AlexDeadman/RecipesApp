@@ -70,6 +70,21 @@
             tools:height="100dp"
             tools:text="@tools:sample/lorem/random" />
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="@string/similar_recipes"
+            android:textColor="?android:textColorPrimary"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/fragment_container_view"
+            android:name="ru.alexdeadman.recipesapp.ui.list.ListFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
     </androidx.appcompat.widget.LinearLayoutCompat>
 
 

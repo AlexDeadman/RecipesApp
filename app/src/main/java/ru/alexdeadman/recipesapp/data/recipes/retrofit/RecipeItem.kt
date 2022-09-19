@@ -28,6 +28,10 @@ data class RecipeItem(
     @SerializedName("difficulty")
     val difficulty: Int
 ) : Parcelable {
+
+    val text
+    get() = listOf(name, description).joinToString()
+
     fun toEntity(): RecipeEntity = RecipeEntity(
         uuid = this.uuid,
         name = this.name,

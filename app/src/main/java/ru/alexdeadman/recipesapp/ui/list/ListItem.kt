@@ -22,6 +22,8 @@ class ListItem(
             super.identifier = value
         }
 
+    var distance: Double = 0.0
+
     override fun createBinding(inflater: LayoutInflater, parent: ViewGroup?): ListItemBinding =
         ListItemBinding.inflate(inflater, parent, false)
 

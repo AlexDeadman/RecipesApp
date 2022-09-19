@@ -10,6 +10,8 @@
     <string name="cant_save_image">Can\'t save image</string>
     <string name="search">Search</string>
     <string name="sort">Sort</string>
+    <string name="similar_recipes">Similar recipes</string>
+    <string name="details">Details</string>
 
     <string-array name="sort_options">
         <item>None</item>

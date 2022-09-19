@@ -13,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.navGraphViewModels
 import com.daimajia.slider.library.SliderTypes.BaseSliderView
 import com.daimajia.slider.library.SliderTypes.DefaultSliderView
 import com.daimajia.slider.library.Transformers.BaseTransformer
@@ -37,6 +38,18 @@ class DetailsFragment : Fragment() {
     private lateinit var recipeItem: RecipeItem
     private val images: List<String> get() = recipeItem.images
 
+    private val viewModel: DetailsViewModel by navGraphViewModels(R.id.detailsFragment)
+
+    companion object {
+        const val IS_DIALOG_SHOWN = "is_dialog_shown"
+        const val CURRENT_POSITION = "current_position"
+
+        private const val TAG = "DetailsFragment"
+    }
+
+    private var isDialogShown: Boolean = false
+    private var currentPosition: Int = 0
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -58,7 +71,8 @@ class DetailsFragment : Fragment() {
 
             picasso = Picasso.with(requireContext())
 
-            recipeItem = requireArguments().getParcelable(BundleKeys.RECIPE_ITEM)!!
+            viewModel.currentRecipeItem = requireArguments().getParcelable(BundleKeys.RECIPE_ITEM)!!
+            recipeItem = viewModel.currentRecipeItem
 
             images.map { url ->
                 sliderLayout.addSlider(
@@ -98,7 +112,20 @@ class DetailsFragment : Fragment() {
         }
     }
 
-    private fun openImageViewer(position: Int) {
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+
+        savedInstanceState?.let {
+            isDialogShown = it.getBoolean(IS_DIALOG_SHOWN)
+            currentPosition = it.getInt(CURRENT_POSITION)
+        }
+
+        if (isDialogShown) {
+            openImageViewer(currentPosition)
+        }
+    }
+
+    private fun openImageViewer(startPosition: Int) {
 
         val imageOverlay = ImageOverlayView(requireContext()).apply {
             onDownloadClick = {
@@ -127,8 +154,13 @@ class DetailsFragment : Fragment() {
             picasso.load(url).into(imageView)
         }
             .withOverlayView(imageOverlay)
-            .withStartPosition(position)
-            .show()
+            .withStartPosition(startPosition)
+            .withImageChangeListener { currentPosition = it }
+            .withDismissListener { isDialogShown = false }
+            .show(!isDialogShown)
+
+        currentPosition = startPosition
+        isDialogShown = true
     }
 
     private fun saveToGallery(bitmap: Bitmap) {
@@ -163,10 +195,10 @@ class DetailsFragment : Fragment() {
                     ""
                 )
             }
-            showToast(getString(R.string.image_saved))
+            showToast(R.string.image_saved)
 
         } catch (e: Exception) {
-            showToast(getString(R.string.cant_save_image))
+            showToast(R.string.cant_save_image)
             Log.e(TAG, "saveToGallery: $e")
         }
     }
@@ -175,11 +207,13 @@ class DetailsFragment : Fragment() {
         super.onDestroyView()
 
         imageViewer.dismiss()
-
         _binding = null
     }
 
-    companion object {
-        private const val TAG = "DetailsFragment"
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putBoolean(IS_DIALOG_SHOWN, isDialogShown)
+        outState.putInt(CURRENT_POSITION, currentPosition)
+
+        super.onSaveInstanceState(outState)
     }
 }

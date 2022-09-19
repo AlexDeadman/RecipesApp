@@ -4,7 +4,7 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import ru.alexdeadman.recipesapp.R
 import ru.alexdeadman.recipesapp.ui.list.SortDialogFragment.SortProperty.*
@@ -34,18 +34,9 @@ class SortDialogFragment : DialogFragment() {
     @Inject
     lateinit var listViewModelFactory: ListViewModelFactory
 
-    private lateinit var viewModel: ListViewModel
+    private val viewModel: ListViewModel by viewModels({ requireActivity() }) {listViewModelFactory}
 
     var onChoice: () -> Unit = {}
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        viewModel = ViewModelProvider(
-            requireActivity(),
-            listViewModelFactory
-        )[ListViewModel::class.java]
-    }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
         AlertDialog.Builder(requireContext())

@@ -15,16 +15,10 @@ class ListViewModel(private val repository: RecipeListRepository) : ViewModel() 
     private val _listStateFlow = MutableStateFlow<ListState?>(null)
     val listStateFlow = _listStateFlow.asStateFlow()
 
-    // TODO: implement through SavedInstanceState (no reasons to use VM for UI)
     var sortOption = SortDialogFragment.SORT_OPTIONS.entries.first()
     var searchQuery: String? = null
-    //
 
     init {
-        fetchRecipes()
-    }
-
-    private fun fetchRecipes() {
         viewModelScope.launch(Dispatchers.IO) {
             repository.fetchRecipes()
                 .catch {

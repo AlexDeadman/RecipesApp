@@ -21,6 +21,6 @@ fun <T> Flow<T>.collectOnLifecycle(
     }
 }
 
-fun Fragment.showToast(message: String) {
-    Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+fun Fragment.showToast(resId: Int) {
+    Toast.makeText(requireContext(), resId, Toast.LENGTH_SHORT).show()
 }
