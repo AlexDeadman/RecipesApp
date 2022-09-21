@@ -6,6 +6,21 @@
     android:layout_height="match_parent"
     tools:context=".ui.list.ListFragment">
 
+    <TextView
+        android:id="@+id/text_view_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="10dp"
+        android:textSize="18sp"
+        tools:text="Message" />
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"

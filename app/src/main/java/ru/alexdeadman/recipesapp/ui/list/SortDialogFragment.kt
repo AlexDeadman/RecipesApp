@@ -34,7 +34,7 @@ class SortDialogFragment : DialogFragment() {
     @Inject
     lateinit var listViewModelFactory: ListViewModelFactory
 
-    private val viewModel: ListViewModel by viewModels({ requireActivity() }) {listViewModelFactory}
+    private val viewModel: ListViewModel by viewModels({ requireActivity() }) { listViewModelFactory }
 
     var onChoice: () -> Unit = {}
 

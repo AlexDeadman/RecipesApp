@@ -29,8 +29,11 @@ data class RecipeItem(
     val difficulty: Int
 ) : Parcelable {
 
-    val text
-    get() = listOf(name, description).joinToString()
+    val mainText
+        get() = listOf(name, description).joinToString()
+
+    val fullText
+        get() = listOf(name, description, instructions).joinToString()
 
     fun toEntity(): RecipeEntity = RecipeEntity(
         uuid = this.uuid,

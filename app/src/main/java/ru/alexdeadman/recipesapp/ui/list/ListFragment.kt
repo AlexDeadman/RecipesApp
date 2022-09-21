@@ -2,6 +2,7 @@ package ru.alexdeadman.recipesapp.ui.list
 
 import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuProvider
@@ -14,15 +15,14 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.diff.FastAdapterDiffUtil
+import com.mikepenz.fastadapter.listeners.ItemFilterListener
 import com.mikepenz.fastadapter.utils.ComparableItemListImpl
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.filterNotNull
 import org.apache.commons.text.similarity.CosineDistance
 import ru.alexdeadman.recipesapp.R
 import ru.alexdeadman.recipesapp.collectOnLifecycle
 import ru.alexdeadman.recipesapp.databinding.FragmentListBinding
-import ru.alexdeadman.recipesapp.showToast
 import ru.alexdeadman.recipesapp.ui.BundleKeys
 import ru.alexdeadman.recipesapp.ui.details.DetailsFragment
 import ru.alexdeadman.recipesapp.ui.details.DetailsViewModel
@@ -99,12 +99,17 @@ class ListFragment : Fragment() {
             }
 
             val picasso = Picasso.with(requireContext())
-
+            
             listViewModel.listStateFlow
-                .filterNotNull()
                 .collectOnLifecycle(viewLifecycleOwner) { state ->
                     when (state) {
+                        is Loading -> {
+                            progressBar.visibility = View.VISIBLE
+                        }
                         is Loaded -> {
+                            progressBar.visibility = View.GONE
+                            textViewMessage.text = ""
+
                             val recipes = state.result.recipes
 
                             FastAdapterDiffUtil[itemAdapter] =
@@ -116,14 +121,21 @@ class ListFragment : Fragment() {
                                         detailsViewModel.similarItems = recipes
                                             .filter { it != current }
                                             .map {
-                                                it to cosineDistance.apply(current.text, it.text)
+                                                it to cosineDistance.apply(
+                                                    current.mainText,
+                                                    it.mainText
+                                                )
                                             }
                                             .filter { it.second in 0.0..0.75 }
                                     }
                                     detailsViewModel.similarItems!!
                                         .map {
-                                            ListItem(it.first, picasso)
-                                                .apply { distance = it.second }
+                                            ListItem(it.first, picasso).apply {
+                                                distance = it.second
+                                            }
+                                        }
+                                        .also {
+                                            if (it.isEmpty()) textViewMessage.setText(R.string.not_found)
                                         }
                                 } else {
                                     recipes.map { ListItem(it, picasso) }
@@ -131,9 +143,12 @@ class ListFragment : Fragment() {
 
                             fastAdapter.withSavedInstanceState(savedInstanceState)
                         }
-                        is NoItems -> showToast(R.string.no_items)
-                        is Error -> showToast(R.string.unknown_error)
+                        is NoItems -> {
+                            progressBar.visibility = View.GONE
+                            textViewMessage.setText(R.string.list_empty)
+                        }
                     }
+                    Log.e(TAG, "state:  ${state::class.simpleName}")
                 }
         }
     }
@@ -194,10 +209,23 @@ class ListFragment : Fragment() {
         )
 
         itemAdapter = ItemAdapter(itemListImpl).apply {
-            itemFilter.filterPredicate = { listItem, constraint ->
-                listItem.recipeItem
-                    .let { listOf(it.name, it.description, it.instructions).joinToString() }
-                    .contains(constraint!!, true)
+            itemFilter.apply {
+                filterPredicate = { listItem, constraint ->
+                    listItem.recipeItem.fullText.contains(constraint!!, true)
+                }
+                itemFilterListener = object : ItemFilterListener<ListItem> {
+                    override fun itemsFiltered(
+                        constraint: CharSequence?,
+                        results: List<ListItem>?
+                    ) {
+                        binding.textViewMessage.text =
+                            if (results!!.isEmpty()) getString(R.string.not_found) else ""
+                    }
+
+                    override fun onReset() {
+                        binding.textViewMessage.text = ""
+                    }
+                }
             }
         }
 
