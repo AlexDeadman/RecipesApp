@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.diff.FastAdapterDiffUtil
-import com.mikepenz.fastadapter.listeners.ItemFilterListener
 import com.mikepenz.fastadapter.utils.ComparableItemListImpl
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
@@ -99,7 +98,7 @@ class ListFragment : Fragment() {
             }
 
             val picasso = Picasso.with(requireContext())
-            
+
             listViewModel.listStateFlow
                 .collectOnLifecycle(viewLifecycleOwner) { state ->
                     when (state) {
@@ -140,8 +139,6 @@ class ListFragment : Fragment() {
                                 } else {
                                     recipes.map { ListItem(it, picasso) }
                                 }
-
-                            fastAdapter.withSavedInstanceState(savedInstanceState)
                         }
                         is NoItems -> {
                             progressBar.visibility = View.GONE
@@ -209,34 +206,20 @@ class ListFragment : Fragment() {
         )
 
         itemAdapter = ItemAdapter(itemListImpl).apply {
-            itemFilter.apply {
-                filterPredicate = { listItem, constraint ->
-                    listItem.recipeItem.fullText.contains(constraint!!, true)
-                }
-                itemFilterListener = object : ItemFilterListener<ListItem> {
-                    override fun itemsFiltered(
-                        constraint: CharSequence?,
-                        results: List<ListItem>?
-                    ) {
-                        binding.textViewMessage.text =
-                            if (results!!.isEmpty()) getString(R.string.not_found) else ""
-                    }
-
-                    override fun onReset() {
-                        binding.textViewMessage.text = ""
-                    }
-                }
+            itemFilter.filterPredicate = { listItem, constraint ->
+                listItem.recipeItem.fullText.contains(constraint!!, true)
             }
         }
 
         fastAdapter = FastAdapter.with(itemAdapter).apply {
             onClickListener = { _, _, listItem, _ ->
-                val destination = if (isSimilarityList) {
-                    R.id.action_detailsFragment_self
-                } else {
-                    listViewModel.searchQuery = searchView.query.toString()
-                    R.id.action_listFragment_to_detailsFragment
-                }
+                val destination =
+                    if (isSimilarityList) {
+                        R.id.action_detailsFragment_self
+                    } else {
+                        listViewModel.searchQuery = searchView.query.toString()
+                        R.id.action_listFragment_to_detailsFragment
+                    }
 
                 findNavController().navigate(
                     destination,
@@ -254,14 +237,10 @@ class ListFragment : Fragment() {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        if (view != null) {
-            if (!isSimilarityList) {
-                listViewModel.searchQuery = searchView.query.toString()
-            }
-            super.onSaveInstanceState(fastAdapter.saveInstanceState(outState))
-        } else {
-            super.onSaveInstanceState(outState)
+        if (view != null && !isSimilarityList) {
+            listViewModel.searchQuery = searchView.query.toString()
         }
+        super.onSaveInstanceState(outState)
     }
 
     override fun onDestroyView() {
