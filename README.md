@@ -12,4 +12,4 @@
 ## Demonstration 
 https://youtube.com/shorts/xC-FFHZAsvI
 
-[![RecipesApp Demonstration](https://img.youtube.com/vi/xC-FFHZAsvI/hqdefault.jpg)]([https://www.youtube.com/watch?v=FFHZAsvI](https://youtube.com/shorts/xC-FFHZAsvI))
+[![RecipesApp Demonstration](https://img.youtube.com/vi/xC-FFHZAsvI/hqdefault.jpg)](https://youtube.com/shorts/xC-FFHZAsvI)
